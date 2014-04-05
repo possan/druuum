@@ -1,0 +1,16 @@
+body {
+	background-color: #fff;
+	color: #000;
+}
+
+tr.selected {
+	background-color: #fcc;
+}
+
+td.cursor {
+	background-color: #ff0;
+}
+
+td.beat {
+	font-weight: bold;
+}
