@@ -2,7 +2,7 @@ body {
 	background-color: #fff;
 	color: #000;
 	font-family: "Helvetica Neue", Helvetica;
-	font-weight: 200;
+	font-weight: 300;
 }
 
 table {
@@ -27,10 +27,28 @@ td.beat {
 	font-weight: bold;
 }
 
-td.c0,
+table tr th {
+	font-weight: normal;
+	padding: 0 10px;
+}
+
+table tr td {
+	background-color: #eee;
+	background: linear-gradient(to bottom, #ddd, #eee);
+}
+
 td.c4,
-td.c8,
-td.c12 { font-weight: bold; }
+td.c5,
+td.c6,
+td.c7,
+td.c12,
+td.c13,
+td.c14,
+td.c15 {
+	background-color: #ddd;
+	background: linear-gradient(to bottom, #ccc, #ddd);
+}
+
 
 /* hahaha */
 table.c0 td.c0,
@@ -48,21 +66,48 @@ table.c11 td.c11,
 table.c12 td.c12,
 table.c13 td.c13,
 table.c14 td.c14,
-table.c15 td.c15 { background-color: #ddd; color: #fff; }
-
-table tr td {
-	background-color: #eee;
+table.c15 td.c15 {
+	background-color: #ccc;
+	color: #fff;
+	background: linear-gradient(to bottom, #eee, #fff);
 }
 
 table tr td span {
 	display: block;
 	margin-top: 10px;
 	width: 32px;
-	height: 10px;
+	height: 15px;
 	background-color: #300;
+	background: linear-gradient(to bottom, #800, #400);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.33);
 }
 
 table tr td.on span {
 	display: block;
 	background-color: #f00;
+	background: linear-gradient(to bottom, #f50, #c30);
+}
+
+
+ul#searchresults {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+ul#searchresults li {
+	margin: 0;
+	padding: 5px;
+	border: 0;
+}
+
+ul#searchresults li:hover {
+	background-color: #00c;
+	color: #fff;
+}
+
+ul#searchresults li i {
+	display: block;
+	opacity: 0.75;
 }

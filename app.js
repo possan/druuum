@@ -243,7 +243,7 @@
 					});
 					console.log(r);
 					var ht = filt.map(function(r) {
-						return '<li hit-mp3="' + r.mp3 + '">' + JSON.stringify(r, null, 2) + '</li>';
+						return '<li hit-mp3="' + r.mp3 + '">' + r.name + ' <i>' + r.artist + ' - ' + r.album + '</i></li>';
 					});
 					$('#searchresults').html(ht.join(''));
 				})
