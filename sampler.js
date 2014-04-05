@@ -1,10 +1,19 @@
 (function(exports) {
 
+	var Slice = function() {
+		this.url = '';
+		this.offset = 0;
+		this.decay = 2000;
+		this.gain = 1.0;
+	}
+
+
 	var Sampler = function() {
 		this.context = new webkitAudioContext();
 		this.samples = {};
 		this.comp = this.context.createDynamicsCompressor();
 		this.comp.threshold = -20;
+		this.maxsamples = 44100 * 10;
 		this.comp.ratio = 10;
 		this.comp.connect(this.context.destination);
 		this.mixer = this.context.createGainNode();
@@ -62,7 +71,7 @@
 		        var tmpbuffer = _this.context.createBuffer(audioData, true);
 		   		var monobuffer = tmpbuffer.getChannelData(0);
 		   		console.log('monobuffer', monobuffer.length);
-		   		var maxlength = 44100 * 2;
+		   		var maxlength = _this.maxsamples;
 		   		var newlength = Math.min(maxlength, monobuffer.length);
 		   		console.log('newlength', newlength);
 		   		var tmpbuffer2 = _this.context.createBuffer(1, maxlength, 44100);
@@ -84,7 +93,11 @@
 		}
 	}
 
-	Sampler.prototype.trig = function(url, starttime, decay) {
+	Sampler.prototype.trigSlice = function(slice) {
+		this.trig(slice.url, slice.offset, slice.decay, slice.gain);
+	}
+
+	Sampler.prototype.trig = function(url, starttime, decay, gain) {
 		if (url) {
 			var samp = this.samples[url];
 			if (typeof(samp) == 'undefined') {
@@ -99,8 +112,8 @@
 				var tmpgain = this.context.createGainNode();
 
 				// hacky envelope
-				tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 0.00, 1.00);
-				tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 0.90, 1.00);
+				tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 0.00, gain || 1.00);
+				tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 0.90, gain || 1.00);
             	tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 1.00, 0.00);
 		        tmpgain.connect(this.mixer);
 
@@ -121,6 +134,7 @@
 		}
 	}
 
+	exports.Slice = Slice;
 	exports.Sampler = Sampler;
 
 })(window || this);
