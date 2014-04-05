@@ -114,9 +114,9 @@
 			var decay = parseInt($('#decay').val(), 10);
 			sampler.preload(url);
 			if (ts.selectedtrack != -1) {
-				pat.tracks[ts.selectedtrack].url = url;
-				pat.tracks[ts.selectedtrack].offset = offset;
-				pat.tracks[ts.selectedtrack].decay = decay;
+				pat.tracks[ts.selectedtrack].slice.url = url;
+				pat.tracks[ts.selectedtrack].slice.offset = offset;
+				pat.tracks[ts.selectedtrack].slice.decay = decay;
 			}
 		}
 
@@ -129,17 +129,24 @@
 			var offset = parseInt($('#offset').val(), 10);
 			var decay = parseInt($('#decay').val(), 10);
 			sampler.preload(url, function() {
-				sampler.trig(url, offset, decay);
+				var tmpslice = new Slice();
+				tmpslice.url = url;
+				tmpslice.offset = offset;
+				tmpslice.decay = decay;
+				sampler.trigSlice(tmpslice);
+				wf.setSlice(tmpslice);
+				/*
 				wf.reload(url);
 				wf.offset = offset;
 				wf.decay = decay;
 				wf.draw();
+				*/
 			});
 
 			if (ts.selectedtrack != -1) {
-				pat.tracks[ts.selectedtrack].url = url;
-				pat.tracks[ts.selectedtrack].offset = offset;
-				pat.tracks[ts.selectedtrack].decay = decay;
+				pat.tracks[ts.selectedtrack].slice.url = url;
+				pat.tracks[ts.selectedtrack].slice.offset = offset;
+				pat.tracks[ts.selectedtrack].slice.decay = decay;
 			}
 		}
 
@@ -195,28 +202,29 @@
 		// woodblock spotify:track:5lkdoxB1uwJWtq6DKIy0Qj http://d318706lgtcm8e.cloudfront.net/mp3-preview/3cac6948426ec5636077b8dc375add78c41567c0
 		// example spotify:track:4juVieLuIMVYHwSSfR03ey
 
-		pat.tracks[0].url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/8f1b97e018fa23643e05abace8305e4e25ec4be6';
-		pat.tracks[1].url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/c759211748200d4ac89708687db0807b8af0c8da';
-		pat.tracks[2].url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/a91dfd60b674cb149c2cf12d423c3c97b44da0cc';
-		pat.tracks[3].url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/3cac6948426ec5636077b8dc375add78c41567c0';
+		pat.tracks[0].slice.url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/8f1b97e018fa23643e05abace8305e4e25ec4be6';
+		pat.tracks[1].slice.url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/c759211748200d4ac89708687db0807b8af0c8da';
+		pat.tracks[2].slice.url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/a91dfd60b674cb149c2cf12d423c3c97b44da0cc';
+		pat.tracks[3].slice.url = 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/3cac6948426ec5636077b8dc375add78c41567c0';
 
-		pat.tracks[0].decay = 2000;
-		pat.tracks[1].decay = 500;
-		pat.tracks[2].decay = 500;
-		pat.tracks[3].decay = 500;
+		pat.tracks[0].slice.decay = 2000;
+		pat.tracks[1].slice.decay = 500;
+		pat.tracks[2].slice.decay = 500;
+		pat.tracks[3].slice.decay = 500;
 
-		pat.tracks[0].offset = 0;
-		pat.tracks[1].offset = 0;
-		pat.tracks[2].offset = 0;
-		pat.tracks[3].offset = 0;
+		pat.tracks[0].slice.offset = 0;
+		pat.tracks[1].slice.offset = 0;
+		pat.tracks[2].slice.offset = 0;
+		pat.tracks[3].slice.offset = 0;
 
 		wf.offset = 50;
 		wf.sampler = sampler;
 		wf.decay = 250;
 		wf.reload('http://d318706lgtcm8e.cloudfront.net/mp3-preview/8f1b97e018fa23643e05abace8305e4e25ec4be6');
-		wf.onUpdate = function(url, o, d) {
-			$('#offset').val(''+o);
-			$('#decay').val(''+d);
+		wf.onUpdateSlice = function(slice) {
+			$('#offset').val(''+slice.offset);
+			$('#decay').val(''+slice.decay);
+			$('#url').val(slice.url);
 			doAssign();
 		}
 		wf.draw();

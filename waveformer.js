@@ -8,6 +8,7 @@
 		this.sampler = null;
 		this.samples = new Float32Array(0);
 		this.onUpdate = null;
+		this.onUpdateSlice = null;
 		this.context = this.element.getContext('2d');
 		var _this = this;
 		this.element.addEventListener('resize', function() {
@@ -31,6 +32,14 @@
 			}
 
 			if (_this.onUpdate) _this.onUpdate(_this.url, _this.offset, _this.decay);
+
+			if (_this.onUpdateSlice) {
+				var tmpslice = new Slice();
+				tmpslice.url = _this.url;
+				tmpslice.offset = _this.offset;
+				tmpslice.decay = _this.decay;
+				 _this.onUpdateSlice(tmpslice);
+			}
 			_this.draw();
 		}
 
@@ -73,6 +82,13 @@
 			console.log('got samples:', _this.samples.length);
 			_this.draw();
 		});
+	}
+
+	Waveformer.prototype.setSlice = function(slice) {
+		this.reload(slice.url);
+		this.offset = slice.offset;
+		this.decay = slice.decay;
+		this.draw();
 	}
 
 	Waveformer.prototype.draw = function() {

@@ -6,8 +6,11 @@
 		this.pattern = null;
 		this.sampler = null;
 		this.delay = 0;
+		this.interval = 1000;
 		this.setBPM(120);
 		this.timer = null;
+		this.beattimer = 0;
+		this.lasttime = 0;
 	}
 
 	Player.prototype.tick = function() {
@@ -16,18 +19,32 @@
 		for(var i=0; i<this.pattern.tracks.length; i++) {
 			var trk = this.pattern.tracks[i];
 			if (trk.steps[this.position] == 1) {
-				this.sampler.trig(trk.url, trk.offset, trk.decay);
+				this.sampler.trigSlice(trk.slice);
 			}
 		}
 		this.position ++;
 		this.position %= 16;
 	}
 
+	Player.prototype.subtimer = function() {
+		var t = (new Date()).getTime();
+		if (this.lasttime == 0)
+			this.lasttime = t;
+		var dt = t - this.lasttime;
+		this.lasttime = t;
+		this.beattimer += dt;
+		// console.log('subtimer', this.beattimer, dt);
+		if (this.beattimer > this.interval) {
+			this.tick();
+			this.beattimer -= this.interval;
+		}
+	}
+
 	Player.prototype.play = function() {
 		if (this.timer == null) {
-			var iv = 1000.0 / (this.bpm * 4.0 / 60.0);
-			console.log('bpm = '+ this.bpm + ', interval=' + iv);
-			this.timer = setInterval(this.tick.bind(this), iv);
+			console.log('bpm = '+ this.bpm);
+			// this.timer = setInterval(this.tick.bind(this), iv);
+			this.timer = setInterval(this.subtimer.bind(this), 25);
 		}
 	}
 
@@ -41,6 +58,10 @@
 	Player.prototype.setBPM = function(bpm) {
 		console.log('set bpm', bpm);
 		this.bpm = bpm;
+		this.interval = 1000.0 / (this.bpm * 4.0 / 60.0);
+		console.log('set interval', this.interval);
 	}
+
+	exports.Player = Player;
 
 })(window || this);

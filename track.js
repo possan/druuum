@@ -4,7 +4,7 @@
 		this.steps = [];
 		this.decay = 1000;
 		this.offset = 0;
-		this.slice = null;
+		this.slice = new Slice();
 		this.url = '';
 		this.numsteps = numsteps;
 		for(var i=0; i<this.numsteps; i++) {

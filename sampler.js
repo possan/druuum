@@ -94,10 +94,10 @@
 	}
 
 	Sampler.prototype.trigSlice = function(slice) {
-		this.trig(slice.url, slice.offset, slice.decay, slice.gain);
+		this._trig(slice.url, slice.offset, slice.decay, slice.gain);
 	}
 
-	Sampler.prototype.trig = function(url, starttime, decay, gain) {
+	Sampler.prototype._trig = function(url, starttime, decay, gain) {
 		if (url) {
 			var samp = this.samples[url];
 			if (typeof(samp) == 'undefined') {
