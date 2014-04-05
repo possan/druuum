@@ -5,6 +5,7 @@
 		this.offset = 0;
 		this.decay = 2000;
 		this.gain = 1.0;
+		this.pitch = 1.0;
 	}
 
 
@@ -94,10 +95,10 @@
 	}
 
 	Sampler.prototype.trigSlice = function(slice) {
-		this._trig(slice.url, slice.offset, slice.decay, slice.gain);
+		this._trig(slice.url, slice.offset, slice.decay, slice.gain, slice.pitch);
 	}
 
-	Sampler.prototype._trig = function(url, starttime, decay, gain) {
+	Sampler.prototype._trig = function(url, starttime, decay, gain, pitch) {
 		if (url) {
 			var samp = this.samples[url];
 			if (typeof(samp) == 'undefined') {
@@ -106,24 +107,19 @@
 
 			samp = this.samples[url];
 			if (samp.state == 'ready') {
-				// console.log('starting ' + url + ', offset=' + starttime);
-				// do something.
-
+				// console.log('starting ' + url + ', offset=' + starttime+ ', decay='+decay+', gain='+gain+', pitch='+pitch);
 				var tmpgain = this.context.createGainNode();
-
-				// hacky envelope
-				tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 0.00, gain || 1.00);
-				tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 0.90, gain || 1.00);
-            	tmpgain.gain.linearRampToValueAtTime(decay / 1000.0 * 1.00, 0.00);
+				tmpgain.gain.value = gain;
+				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.00, gain || 1.00);
+				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.90, gain || 1.00);
+            	// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 1.00, 0.00);
 		        tmpgain.connect(this.mixer);
-
 				var tmpsource = this.context.createBufferSource();
+				console.log(tmpsource);
 		        tmpsource.buffer = samp.buffer;
 		        tmpsource.connect(tmpgain);
+				tmpsource.playbackRate.value = pitch || 1.0;
 				tmpsource.start(0, starttime / 1000.0, decay / 1000.0);
-
-				// samp.element.currentTime = 0;
-				// samp.element.play();
 			}
 
 			if (samp.state == 'loading') {

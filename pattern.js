@@ -2,7 +2,7 @@
 
 	var Pattern = function() {
 		this.position = 0;
-		this.numtracks = 4;
+		this.numtracks = 8;
 		this.numsteps = 16;
 		this.tracks = [];
 		for(var i=0; i<this.numtracks; i++) {
@@ -21,6 +21,41 @@
 	Pattern.prototype.toggle = function(r, c) {
 		var v = this.get(r, c);
 		this.set(r, c, 1 - v);
+	}
+
+	Pattern.prototype.toJson = function() {
+		var ret = [];
+		for(var i=0; i<this.tracks.length; i++) {
+			var trkin = this.tracks[i];
+			var steps = trkin.steps.join('');
+			var trkout = {
+				u: trkin.slice.url,
+				o: trkin.slice.offset,
+				d: trkin.slice.decay,
+				g: trkin.slice.gain,
+				p: trkin.slice.pitch,
+				t: steps
+			}
+			ret.push(trkout);
+		}
+		return JSON.stringify(ret);
+	}
+
+	Pattern.prototype.parseJson = function(json) {
+		var obj = JSON.parse(json);
+		if (obj) {
+			for(var i=0; i<obj.length; i++) {
+				var trkin = obj[i];
+				var trkout = this.tracks[i];
+				var steps = (trkin.t || '0000000000000000').split('').map(function(r) { return parseInt(r, 10); });
+				trkout.slice.url = trkin.u || '';
+				trkout.slice.offset = trkin.o || 0;
+				trkout.slice.decay = trkin.d || 1000.0;
+				trkout.slice.gain = trkin.g || 1.0;
+				trkout.slice.pitch = trkin.p || 1.0;
+				trkout.steps = steps;
+			}
+		}
 	}
 
 	exports.Pattern = Pattern;

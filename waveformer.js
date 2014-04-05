@@ -9,8 +9,11 @@
 		this.samples = new Float32Array(0);
 		this.onUpdate = null;
 		this.onUpdateSlice = null;
+		this.onPreview = null;
 		this.context = this.element.getContext('2d');
+
 		var _this = this;
+
 		this.element.addEventListener('resize', function() {
 			_this.draw();
 		});
@@ -22,7 +25,7 @@
 				return;
 			var dur = _this.samples.length / 44100.0;
 			var w = _this.element.offsetWidth;
-			var t = Math.round(1000.0 * x / w * dur);
+			var t = 1000.0 * x / w * dur;
 
 			if (dragpoint == 1) {
 				_this.offset = t;
@@ -31,7 +34,9 @@
 				_this.decay = Math.max(20, t - _this.offset);
 			}
 
-			if (_this.onUpdate) _this.onUpdate(_this.url, _this.offset, _this.decay);
+			if (_this.onUpdate) {
+				_this.onUpdate(_this.url, _this.offset, _this.decay);
+			}
 
 			if (_this.onUpdateSlice) {
 				var tmpslice = new Slice();
@@ -44,13 +49,13 @@
 		}
 
 		this.element.addEventListener('mousedown', function(e) {
-			// console.log('mousedown', e);
 			var h = _this.element.offsetHeight;
 
 			if (e.offsetY < 50) {
 				dragpoint = 1;
  				dragX(e.offsetX);
  			}
+
 			if (e.offsetY > h - 50) {
  				dragpoint = 2;
  				dragX(e.offsetX);
@@ -58,12 +63,18 @@
 		});
 
 		this.element.addEventListener('mouseup', function(e) {
-			// console.log('mouseup', e);
 			dragpoint = 0;
+
+			if (_this.onPreview) {
+				var tmpslice = new Slice();
+				tmpslice.url = _this.url;
+				tmpslice.offset = _this.offset;
+				tmpslice.decay = _this.decay;
+				_this.onPreview(tmpslice);
+			}
 		});
 
 		this.element.addEventListener('mousemove', function(e) {
-			// console.log('mouseup', e);
 			dragX(e.offsetX);
 		});
 	}
@@ -85,9 +96,11 @@
 	}
 
 	Waveformer.prototype.setSlice = function(slice) {
-		this.reload(slice.url);
-		this.offset = slice.offset;
-		this.decay = slice.decay;
+		if (slice) {
+			this.reload(slice.url);
+			this.offset = slice.offset;
+			this.decay = slice.decay;
+		}
 		this.draw();
 	}
 
@@ -95,10 +108,11 @@
 		var w = this.element.offsetWidth;
 		var h = this.element.offsetHeight;
 		var dur = this.samples.length / 44100.0;
+		// console.log('draw',w,h,dur);
 		this.context.clearRect(0, 0, w, h);
-		this.context.fillStyle = '#020';
+		this.context.fillStyle = '#010';
 		this.context.fillRect(0, 0, w, h);
-		this.context.fillStyle = '#080';
+		this.context.fillStyle = '#070';
 		var selx = w * this.offset / 1000 / dur;
 		var selw = w * this.decay / 1000 / dur;
 		this.context.fillRect(selx, 0, selw, h);

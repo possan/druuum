@@ -36,14 +36,16 @@
 		// console.log('subtimer', this.beattimer, dt);
 		if (this.beattimer > this.interval) {
 			this.tick();
-			this.beattimer -= this.interval;
+			while(this.beattimer > this.interval) {
+				this.beattimer -= this.interval;
+			}
 		}
 	}
 
 	Player.prototype.play = function() {
 		if (this.timer == null) {
 			console.log('bpm = '+ this.bpm);
-			// this.timer = setInterval(this.tick.bind(this), iv);
+			this.lasttime = 0;
 			this.timer = setInterval(this.subtimer.bind(this), 25);
 		}
 	}
