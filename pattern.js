@@ -49,10 +49,10 @@
 				var trkout = this.tracks[i];
 				var steps = (trkin.t || '0000000000000000').split('').map(function(r) { return parseInt(r, 10); });
 				trkout.slice.url = trkin.u || '';
-				trkout.slice.offset = trkin.o || 0;
-				trkout.slice.decay = trkin.d || 1000.0;
-				trkout.slice.gain = trkin.g || 1.0;
-				trkout.slice.pitch = trkin.p || 1.0;
+				trkout.slice.offset = trkin.o;
+				trkout.slice.decay = trkin.d;
+				trkout.slice.gain = trkin.g;
+				trkout.slice.pitch = trkin.p;
 				trkout.steps = steps;
 			}
 		}
