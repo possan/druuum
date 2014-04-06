@@ -14,10 +14,16 @@
 			decay: 400
 		},
 		{
-			name: '909 Kick',
+			name: 'Oizo Bass',
 			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/2bcb0f4c8a9d44a6ee5b357b1c9c9d7d0d61b0a1',
-			offset: 0,
-			decay: 1000
+			offset: 2080,
+			decay: 465
+		},
+		{
+			name: '909 Kick',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/80977913b0113c6262d9315569089d5ed5d7cf8e',
+			offset: 25,
+			decay: 1500
 		},
 		{
 			name: 'Daft Primitive',
@@ -39,8 +45,8 @@
 		},
 		{
 			name: 'Closed hat',
-			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6caec03ceea0e6eab2fa058b9f830d623dcafcef',
-			offset: 25,
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/911e76f1691a4b0d3429dcafd0d593bce80cca94',
+			offset: 40,
 			decay: 150
 		},
 		{
@@ -48,6 +54,72 @@
 			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6caec03ceea0e6eab2fa058b9f830d623dcafcef',
 			offset: 4505,
 			decay: 345
+		},
+		{
+			name: 'Dist synth stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/ee942142637df559bdff7bd50aafa8c336f60296',
+			offset: 3580,
+			decay: 250
+		},
+		{
+			name: 'Dist synth stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/ee942142637df559bdff7bd50aafa8c336f60296',
+			offset: 3475,
+			decay: 340
+		},
+		{
+			name: 'Dubmood snare',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/4fb74bba93db264b413041741f89e5ee74f57ab2',
+			offset: 7130,
+			decay: 230
+		},
+		{
+			name: 'Jarre Synth 1',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/47b49bcdae0e104d50ff1e217b4137a67b98ef38',
+			offset: 4395,
+			decay: 365
+		},
+		{
+			name: 'Broken note stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6be6a45f7f376f6a9646df5162ef7402c3085c28',
+			offset: 5095,
+			decay: 350
+		},
+		{
+			name: 'Broken note stab 2',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6be6a45f7f376f6a9646df5162ef7402c3085c28',
+			offset: 6270,
+			decay: 350
+		},
+		{
+			name: 'Lullaby choir',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/d9d8686acc79916d2db76abdaa2c18a594fed332',
+			offset: 4840,
+			decay: 935
+		},
+		{
+			name: 'Tilliander kick',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/812604d13bc31f2583bb18ea24e18ed302b42065',
+			offset: 2045,
+			decay: 320
+		},
+		{
+			name: 'Tilliander stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/812604d13bc31f2583bb18ea24e18ed302b42065',
+			offset: 4855,
+			decay: 235
+		},
+		{
+			name: 'Terje stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6a0945bbb0a446ba5c0e909010b4f42e1d780893',
+			offset: 5335,
+			decay: 365
+		},
+		{
+			name: 'Abba stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/012502941161f69d6dc62d1b0f29bf9df88dbbb7',
+			offset: 5060,
+			decay: 175
 		}
 	];
 
@@ -103,7 +175,7 @@
 			var tr = $('<tr>');
 			if (i == this.selectedtrack) tr.addClass('selected');
 			var td1 = $('<th>');
-			td1.text('track #'+i);
+			td1.text('Track '+(1+i));
 			td1.click(this.assigntrack.bind(this, i));
 			tr.append(td1);
 			for(var j=0; j<this.pattern.numsteps; j++) {
@@ -236,7 +308,7 @@
 
 		function persist() {
 			var json = pat.toJson();
-			console.log('persisting json', json);
+			// console.log('persisting json', json);
 			location.hash = window.btoa(json);
 		}
 
@@ -317,7 +389,7 @@
 					});
 					console.log(r);
 					var ht = filt.map(function(r) {
-						return '<li hit-mp3="' + r.mp3 + '">' + r.name + ' <i>' + r.artist + ' - ' + r.album + '</i></li>';
+						return '<li hit-mp3="' + r.mp3 + '">' + r.name + ' - ' + r.artist + ' - ' + r.album + '</li>';
 					});
 					$('#searchresults').html(ht.join(''));
 				})
@@ -336,10 +408,10 @@
 			var mp3 = targ.attr('hit-mp3');
 			console.log('mp3 link', mp3);
 			if (mp3 != '') {
-				se.setUrl(mp3);
 				$('#searchview').hide();
 				$('#sampleview').show();
 				$('#trackview').hide();
+				se.setUrl(mp3);
 				se.draw();
 			}
 		});

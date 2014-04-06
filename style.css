@@ -8,10 +8,13 @@ body {
 	background: linear-gradient(to bottom, #ddd, #eee);
 }
 
+.outerseq {
+	background: linear-gradient(to bottom, #fff, #eee);
+}
+
 table {
-	padding: 20px;
-	margin: 10px;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.33);
+	padding: 20px 0;
+	margin: 0px;
 }
 
 p {
@@ -32,7 +35,8 @@ table tr td {
 }
 
 tr.selected {
-	background-color: #fcc;
+	background-color: #0a0;
+	color: #fff;
 }
 
 td.cursor {
@@ -51,6 +55,9 @@ table tr th {
 table tr td {
 	background-color: #eee;
 	background: linear-gradient(to bottom, #ddd, #eee);
+	border-radius: 5px;
+	padding: 10px;
+	box-shadow: inset 0 1px 4px rgba(0,0,0,0.25);
 }
 
 td.c4,
@@ -90,20 +97,39 @@ table.c15 td.c15 {
 
 table tr td span {
 	display: block;
-	margin-top: 10px;
-	width: 32px;
-	height: 15px;
+	margin-bottom: 0px;
+	width: 24px;
+	height: 20px;
 	background-color: #300;
-	background: linear-gradient(to bottom, #800, #400);
-	box-shadow: 0 1px 1px rgba(0,0,0,0.33);
+	background: linear-gradient(to bottom, #6a6, #696);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
 table tr td.on span {
 	display: block;
 	background-color: #f00;
-	background: linear-gradient(to bottom, #f50, #c30);
+	background: linear-gradient(to bottom, #1f1, #0a0);
 }
 
+table.c0 td.c0.on span,
+table.c1 td.c1.on span,
+table.c2 td.c2.on span,
+table.c3 td.c3.on span,
+table.c4 td.c4.on span,
+table.c5 td.c5.on span,
+table.c6 td.c6.on span,
+table.c7 td.c7.on span,
+table.c8 td.c8.on span,
+table.c9 td.c9.on span,
+table.c10 td.c10.on span,
+table.c11 td.c11.on span,
+table.c12 td.c12.on span,
+table.c13 td.c13.on span,
+table.c14 td.c14.on span,
+table.c15 td.c15.on span {
+	background: linear-gradient(to bottom, #4f4, #2f2);
+	box-shadow: 0 0px 10px rgba(0,255,0,1);
+}
 
 
 ul#searchresults {
@@ -122,7 +148,7 @@ ul#searchresults li {
 
 ul#searchresults li:hover {
 	background-color: #00c;
-	background: linear-gradient(to bottom, #00a, #00e);
+	background: linear-gradient(to bottom, #060, #090);
 	color: #fff;
 }
 
@@ -149,13 +175,56 @@ ul#searchresults li i {
 	float: left;
 	width: 33.3%;
 	text-align: center;
-	color: #0f0;
+	color: #0c0;
 	padding: 10px;
 	box-sizing: border-box;
+	font-weight: 800;
 	cursor: pointer;
+	text-shadow: 0 3px 1px rgba(0,0,0,0.5);
 }
 
 #menuview a:hover {
 	background: linear-gradient(to bottom, #333, #666);
+	color: #1f1;
+}
+
+
+button {
+	display: inline-block;
+	background: linear-gradient(to bottom, #1a1, #191);
+	border: 0;
+	border-radius: 5px;
+	padding: 10px 20px 11px 20px;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+	border-bottom: 2px solid #070;
+	color: #fff;
+	font-family: "Helvetica Neue", Helvetica;
+	font-weight: 200;
+	font-size: 11pt;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.88);
+	outline: none;
+}
+
+button:hover {
+	background: linear-gradient(to bottom, #2c2, #2b2);
+}
+
+button:active {
+	background: linear-gradient(to bottom, #191, #171);
+	border-bottom: 1px solid #070;
+	margin-top: 2px;
+	margin-bottom: -2px;
+}
+
+input {
+	border: 0;
+	padding: 5px 10px;
+	border-top: 1px solid #888;
+	box-shadow: inset 0 1px 4px rgba(0,0,0,0.25);
+	outline: none;
+	border-radius: 10px;
+	font-family: "Helvetica Neue", Helvetica;
+	font-weight: 200;
+	font-size: 11pt;
 }
 
