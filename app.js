@@ -14,6 +14,12 @@
 			decay: 400
 		},
 		{
+			name: 'Oizo Tap',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/f3a25ffd7a41cc43bf999a75f7015689d54d6f2a',
+			offset: 3380,
+			decay: 245
+		},
+		{
 			name: 'Oizo Bass',
 			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/2bcb0f4c8a9d44a6ee5b357b1c9c9d7d0d61b0a1',
 			offset: 2080,
@@ -90,6 +96,12 @@
 			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6be6a45f7f376f6a9646df5162ef7402c3085c28',
 			offset: 6270,
 			decay: 350
+		},
+		{
+			name: 'Broken note stab 3',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6be6a45f7f376f6a9646df5162ef7402c3085c28',
+			offset: 5470,
+			decay: 440
 		},
 		{
 			name: 'Lullaby choir',
