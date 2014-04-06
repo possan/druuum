@@ -115,7 +115,7 @@
             	// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 1.00, 0.00);
 		        tmpgain.connect(this.mixer);
 				var tmpsource = this.context.createBufferSource();
-				console.log(tmpsource);
+				// console.log(tmpsource);
 		        tmpsource.buffer = samp.buffer;
 		        tmpsource.connect(tmpgain);
 				tmpsource.playbackRate.value = pitch || 1.0;

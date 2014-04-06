@@ -12,31 +12,50 @@
 </head>
 <body>
 
-<table id="seq"></table>
+<div id="menuview">
+	<a id="menutrack">TRACK</a>
+	<a id="menusample">SAMPLE</a>
+	<a id="menusearch">SEARCH</a>
+</div>
 
-<p>
-	<button id="play">|&gt;</button>
-	<button id="stop">[&nbsp;]</button>
-	&nbsp;
-	BPM: <input id="bpm" value="125" size="4"></input>
-</p>
+<div id="trackview">
+	<table id="seq"></table>
 
-<p>
+	<p class="white">
+		<button id="play">|&gt;</button>
+		<button id="stop">[&nbsp;]</button>
+		&nbsp;
+		BPM: <input id="bpm" value="125" size="4"></input>
+	</p>
+</div>
+
+<div id="sampleview">
+
 	<canvas id="waveformeditor" width="2000" height="200"></canvas>
-</p>
 
-<p>
-	Sample URL: <input id="url" value="http://d318706lgtcm8e.cloudfront.net/mp3-preview/f02b121d9684cdeaa0a6242e2f6d247337277fb3" size="50"></input> &nbsp;
-	Offset: <input id="offset" value="0" size="5"></input> ms &nbsp;
-	Decay: <input id="decay" value="1000" size="5"></input> ms &nbsp;
-	<button id="try">Try</button>
-	<button id="assign">Assign to selected track</button>
-</p>
+	<p class="white">
+		Sample URL: <input id="url" value="http://d318706lgtcm8e.cloudfront.net/mp3-preview/f02b121d9684cdeaa0a6242e2f6d247337277fb3" size="150"></input>
+	</p>
+	<p class="white">
+		Offset: <input id="offset" value="0" size="5"></input> ms &nbsp;
+		Decay: <input id="decay" value="1000" size="5"></input> ms &nbsp;
+	</p>
+	<p class="white">
+		<button id="startsearch">Search...</button>
+		<button id="try">Try</button>
+		<button id="assign">Assign to selected track</button>
+	</p>
+	<p id="samplepresets">
 
-<p>
-	Search for sample: <input id="search" size="50"></input>
-	<ul id="searchresults"></ul>
-</p>
+	</p>
+</div>
+
+<div id="searchview">
+	<p class="white">
+		Search for sample: <input id="search" size="50"></input>
+		<ul id="searchresults"></ul>
+	</p>
+</div>
 
 </body>
 </html>

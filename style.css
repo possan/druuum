@@ -3,13 +3,29 @@ body {
 	color: #000;
 	font-family: "Helvetica Neue", Helvetica;
 	font-weight: 300;
+	margin: 0;
+	padding: 0;
+	background: linear-gradient(to bottom, #ddd, #eee);
 }
 
 table {
-	border-collapse: collapse;
+	padding: 20px;
+	margin: 10px;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.33);
+}
+
+p {
+	display: block;
+	padding: 10px 10px 10px 10px;
+	margin: 0;
+}
+
+p.white {
+	background: linear-gradient(to bottom, #fff, #e0e0e0);
 }
 
 table tr td {
+	cursor: pointer;
 	padding: 5px;
 	margin: 2px;
 	border: 0;
@@ -89,6 +105,7 @@ table tr td.on span {
 }
 
 
+
 ul#searchresults {
 	list-style: none;
 	margin: 0;
@@ -98,16 +115,47 @@ ul#searchresults {
 
 ul#searchresults li {
 	margin: 0;
-	padding: 5px;
+	padding: 10px;
 	border: 0;
+	background: linear-gradient(to bottom, #e0e0e0, #fff);
 }
 
 ul#searchresults li:hover {
 	background-color: #00c;
+	background: linear-gradient(to bottom, #00a, #00e);
 	color: #fff;
 }
 
 ul#searchresults li i {
-	display: block;
 	opacity: 0.75;
 }
+
+#searchview {
+	display: none;
+}
+
+#sampleview {
+	display: none;
+}
+
+#menuview {
+	width: 100%;
+	height: 40px;
+	background: linear-gradient(to bottom, #111, #444);
+}
+
+#menuview a {
+	display: block;
+	float: left;
+	width: 33.3%;
+	text-align: center;
+	color: #0f0;
+	padding: 10px;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+#menuview a:hover {
+	background: linear-gradient(to bottom, #333, #666);
+}
+

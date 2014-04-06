@@ -1,5 +1,56 @@
 (function(exports) {
 
+	var samplepresets = [
+		{
+			name: "Oizo Glitch Snare",
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/2bcb0f4c8a9d44a6ee5b357b1c9c9d7d0d61b0a1',
+			offset: 1370,
+			decay: 465
+		},
+		{
+			name: 'Oizo Glitch Beep',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/2bcb0f4c8a9d44a6ee5b357b1c9c9d7d0d61b0a1',
+			offset: 6250,
+			decay: 400
+		},
+		{
+			name: '909 Kick',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/2bcb0f4c8a9d44a6ee5b357b1c9c9d7d0d61b0a1',
+			offset: 0,
+			decay: 1000
+		},
+		{
+			name: 'Daft Primitive',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/a9e4e5d4b60706b45ae12188b19797eb06328361',
+			offset: 4060,
+			decay: 500
+		},
+		{
+			name: 'Voice: Nine',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/4c45d849156647c2a736bc2b0fe7e2fde64cea19',
+			offset: 1620,
+			decay: 900
+		},
+		{
+			name: 'Average brushy hat',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/369de4c8d0ae1da72a7bfc56031c8b51d420c617',
+			offset: 20,
+			decay: 200
+		},
+		{
+			name: 'Closed hat',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6caec03ceea0e6eab2fa058b9f830d623dcafcef',
+			offset: 25,
+			decay: 150
+		},
+		{
+			name: 'Chip music stab',
+			url: 'http://d318706lgtcm8e.cloudfront.net/mp3-preview/6caec03ceea0e6eab2fa058b9f830d623dcafcef',
+			offset: 4505,
+			decay: 345
+		}
+	];
+
 	var TableSequencer = function() {
 		this.selectedtrack = -1;
 		this.onSelectTrack = null;
@@ -118,16 +169,39 @@
 		$('#try').click(function(e) {
 			// doTry();
 		});
+
+		var el = $('#samplepresets');
+		samplepresets.forEach(function(r) {
+			var el2 = $('<button />');
+			el2.click(_this.loadPreset.bind(_this, r));
+			el2.text(r.name);
+			el.append(el2);
+		});
+	}
+
+	SliceEditor.prototype.loadPreset = function(slice) {
+		this.setSlice(slice);
+		if (this.onUpdate) this.onUpdate(this.getSlice());
 	}
 
 	SliceEditor.prototype.setSlice = function(slice) {
-		this.wf.setSlice(slice);
+		if (slice) {
+			$('#url').val('' + slice.url);
+			$('#offset').val('' + slice.offset);
+			$('#decay').val('' + slice.decay);
+			this.wf.setSlice(slice);
+		}
+		this.wf.draw();
+	}
+
+	SliceEditor.prototype.draw = function() {
 		this.wf.draw();
 	}
 
 	SliceEditor.prototype.setUrl = function(url) {
 		$('#url').val(url);
 		this.wf.setSlice(this.getSlice());
+		$('#url').val(url);
 		if (this.onUpdate) this.onUpdate(this.getSlice());
 		this.wf.draw();
 	}
@@ -263,9 +337,38 @@
 			console.log('mp3 link', mp3);
 			if (mp3 != '') {
 				se.setUrl(mp3);
+				$('#searchview').hide();
+				$('#sampleview').show();
+				$('#trackview').hide();
+				se.draw();
 			}
 		});
 
+		$('#startsearch').click(function(e) {
+			$('#searchview').show();
+			$('#sampleview').show();
+			$('#trackview').hide();
+		});
+
+		$('#menutrack').click(function(e) {
+			$('#searchview').hide();
+			$('#sampleview').hide();
+			$('#trackview').show();
+		});
+
+		$('#menusample').click(function(e) {
+			$('#searchview').hide();
+			$('#sampleview').show();
+			$('#trackview').hide();
+			se.draw();
+		});
+		
+		$('#menusearch').click(function(e) {
+			$('#searchview').show();
+			$('#sampleview').hide();
+			$('#trackview').hide();
+		});
+		
 		// set up defaults
 
 		// 808 kick spotify:track:52VO7qzwlCnGiwnQ1oy5TF http://d318706lgtcm8e.cloudfront.net/mp3-preview/8f1b97e018fa23643e05abace8305e4e25ec4be6
