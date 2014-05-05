@@ -188,6 +188,9 @@ ul#searchresults li i {
 	color: #1f1;
 }
 
+#trackview {
+	clear: both;
+}
 
 button {
 	display: inline-block;

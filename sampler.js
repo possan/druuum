@@ -10,14 +10,18 @@
 
 
 	var Sampler = function() {
-		this.context = new webkitAudioContext();
+		var contextObject = window.AudioContext || window.webkitAudioContext || null;
+		if (contextObject === null) {
+			throw new Error('AudioContext not supported. :(');
+		}
+		this.context =  new contextObject();
 		this.samples = {};
 		this.comp = this.context.createDynamicsCompressor();
 		this.comp.threshold = -20;
 		this.maxsamples = 44100 * 10;
 		this.comp.ratio = 10;
 		this.comp.connect(this.context.destination);
-		this.mixer = this.context.createGainNode();
+		this.mixer = this.context.createGain();
 		this.mixer.connect(this.comp);
 	}
 
@@ -69,28 +73,30 @@
 			request.onload = function() {
 		        var audioData = request.response;
 		        console.log('audio onload', audioData);
-		        var tmpbuffer = _this.context.createBuffer(audioData, true);
-		   		var monobuffer = tmpbuffer.getChannelData(0);
-		   		console.log('monobuffer', monobuffer.length);
-		   		var maxlength = _this.maxsamples;
-		   		var newlength = Math.min(maxlength, monobuffer.length);
-		   		console.log('newlength', newlength);
-		   		var tmpbuffer2 = _this.context.createBuffer(1, maxlength, 44100);
-		   		var audioData2 = tmpbuffer2.getChannelData(0)
-				// var audioData2 = new Float32Array(newlength);
-		   		for(var i=0; i<newlength; i++) {
-		   			audioData2[i] = monobuffer[i];
-		   		}
-		   		// tmpbuffer.getChannelData(0).set(audioData2);
-		   		obj.buffer = tmpbuffer2;// _this.context.createBuffer(tmpbuffer, true);
-				obj.state = 'ready';
-				obj.callbacks.forEach(function(cb) {
-					cb(obj);
-				});
-		    };
-		    request.send();
+		        _this.context.decodeAudioData(audioData, function(tmpbuffer) {
+				   		var monobuffer = tmpbuffer.getChannelData(0);
+				   		console.log('monobuffer', monobuffer.length);
+				   		var maxlength = _this.maxsamples;
+				   		var newlength = Math.min(maxlength, monobuffer.length);
+				   		console.log('newlength', newlength);
+				   		var tmpbuffer2 = _this.context.createBuffer(1, maxlength, 44100);
+				   		var audioData2 = tmpbuffer2.getChannelData(0)
+						// var audioData2 = new Float32Array(newlength);
+				   		for(var i=0; i<newlength; i++) {
+				   			audioData2[i] = monobuffer[i];
+				   		}
+				   		// tmpbuffer.getChannelData(0).set(audioData2);
+				   		obj.buffer = tmpbuffer2;// _this.context.createBuffer(tmpbuffer, true);
+						obj.state = 'ready';
+						obj.callbacks.forEach(function(cb) {
+							cb(obj);
+						});
+					}, function() {});
 
-			this.samples[url] = obj;
+			    };
+			    request.send();
+
+				this.samples[url] = obj;
 		}
 	}
 
@@ -108,7 +114,7 @@
 			samp = this.samples[url];
 			if (samp.state == 'ready') {
 				// console.log('starting ' + url + ', offset=' + starttime+ ', decay='+decay+', gain='+gain+', pitch='+pitch);
-				var tmpgain = this.context.createGainNode();
+				var tmpgain = this.context.createGain();
 				tmpgain.gain.value = gain;
 				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.00, gain || 1.00);
 				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.90, gain || 1.00);
