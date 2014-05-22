@@ -164,6 +164,10 @@ ul#searchresults li i {
 	display: none;
 }
 
+#playlistsview {
+	display: none;
+}
+
 #menuview {
 	width: 100%;
 	height: 40px;
@@ -173,7 +177,7 @@ ul#searchresults li i {
 #menuview a {
 	display: block;
 	float: left;
-	width: 33.3%;
+	width: 25%;
 	text-align: center;
 	color: #0c0;
 	padding: 10px;

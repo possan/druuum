@@ -16,6 +16,7 @@
 	<a id="menutrack">TRACK</a>
 	<a id="menusample">SAMPLE</a>
 	<a id="menusearch">SEARCH</a>
+	<a id="menuplaylists">PLAYLISTS</a>
 </div>
 
 <div id="trackview">
@@ -52,6 +53,26 @@
 		Search for sample: <input id="search" size="50"></input>
 		<ul id="searchresults"></ul>
 	</p>
+</div>
+
+<div id="playlistsview">
+	<div id="playlistlogin">
+		<p class="white">
+			<button id="playlistloginbutton">Log in</button>
+		</p>
+	</div>
+	<div id="playlistrootlistview">
+		<p class="white">
+			<button id="playlistlogoutbutton">Log out <span id="username"></span></button>
+		</p>
+		<ul id="rootlistresults"></ul>
+	</div>
+	<div id="playlistplaylistview">
+		<p class="white">
+			<button id="rootlistlink">&lt; Show all playlists</button>
+		</p>
+		<ul id="playlistresults"></ul>
+	</div>
 </div>
 
 <script>

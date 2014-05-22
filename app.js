@@ -1,5 +1,17 @@
 (function(exports) {
 
+	var api = new SpotifyAPI();
+
+	if (location.host == 'localhost:8000') {
+		// development version
+		api.Login.setClientId('2e7b7dc36e1a424a84368e5cc74201ae');
+		api.Login.setRedirect('http://localhost:8000');
+	} else {
+		// live env.
+		api.Login.setClientId('5fa00dffd0eb463b9de8196d7855b9e7');
+		api.Login.setRedirect('http://lab.possan.se/druuum');
+	}
+
 	var samplepresets = [
 		{
 			name: "Oizo Glitch Snare",
@@ -301,19 +313,105 @@
 		return tmpslice;
 	}
 
+	var PlaylistView = function(api, elementid) {
+		this.api = api;
+		this.element = $('#'+elementid);
+		this.playlist = '';
+		this.playlistOwner = '';
+	}
 
+	PlaylistView.prototype.init = function() {
+		// hook up all event handlers.
+		var _this = this;
 
+		this.element.find('#playlistloginbutton').click(function() {
+			console.log('do login.');
+			_this.api.Login.openLogin();
+		});
 
+		this.element.find('#playlistlogoutbutton').click(function() {
+			console.log('do logout.');
+			_this.api.Login.setAccessToken('');
+			_this.redraw();
+		});
 
+		this.element.find('#rootlistlink').click(function() {
+			console.log('do logout.');
+			_this.playlist = '';
+			_this.playlistOwner = '';
+			_this.redraw();
+		});
 
+		this.element.find('#rootlistresults').click(function(e) {
+			console.log('click rootlistresults', e);
+			var targ = $(e.target);
+			_this.playlist = targ.attr('hit-playlist');
+			_this.playlistOwner = targ.attr('hit-owner');
+			_this.redraw();
+		});
 
+		this.element.find('#playlistresults').click(function(e) {
+			console.log('click playlistesults', e);
+			var targ = $(e.target);
+			var id = targ.attr('hit-track');
+			console.log('load track id', id);
+			api.Track.load(id, function(track) {
+				console.log('got track', track);
+				var mp3 = track.preview_url;
+				console.log('mp3 link', mp3);
+				if (mp3 != '') {
+					_this.onSelectMp3(mp3);
+				}
+			});
+		});
 
+		this.redraw();
+	}
 
+	PlaylistView.prototype.updateRootlist = function() {
+		$('#rootlistresults').html('<li>Loading...</li>');
+		this.api.Playlists.getRootlist(function(rootlist) {
+			console.log('rootlist', rootlist);
+			var ht = rootlist.items.map(function(r) {
+				// console.log('r', r);
+				return '<li hit-owner="' + r.owner.id + '" hit-playlist="' + r.id + '">' +
+					r.name + ' (' + r.tracks.count + ' tracks)</li>';
+			});
+			$('#rootlistresults').html(ht.join(''));
+		});
+	}
 
+	PlaylistView.prototype.updatePlaylist = function() {
+		$('#playlistresults').html('<li>Loading...</li>');
+		this.api.Playlists.getPlaylist(this.playlistOwner, this.playlist, function(playlist) {
+			console.log('playlist', playlist);
+			var ht = playlist.items.map(function(r) {
+				// console.log('r', r);
+				return '<li hit-track="' + r.track.id + '">' + r.track.name + ' - ' + r.track.artists[0].name + ' - ' + r.track.album.name + '</li>';
+			});
+			$('#playlistresults').html(ht.join(''));
+		});
+	}
 
-
-
-
+	PlaylistView.prototype.redraw = function() {
+		if (this.api.Login.getAccessToken() == '') {
+			this.element.find('#playlistlogin').show();
+			this.element.find('#playlistrootlistview').hide();
+			this.element.find('#playlistpaylistview').hide();
+		} else {
+			this.element.find('#playlistlogin').hide();
+			this.element.find('#username').text(this.api.Login.getUsername());
+			if (this.playlist == '' && this.playlistOwner == '') {
+				this.element.find('#playlistrootlistview').show();
+				this.element.find('#playlistplaylistview').hide();
+				this.updateRootlist();
+			} else {
+				this.element.find('#playlistrootlistview').hide();
+				this.element.find('#playlistplaylistview').show();
+				this.updatePlaylist();
+			}
+		}
+	}
 
 	window.addEventListener('load', function() {
 		var pat = new Pattern();
@@ -342,6 +440,7 @@
 				persist();
 			}
 		}
+
 		se.onPreview = function(slice) {
 			sampler.trigSlice(slice);
 		}
@@ -383,8 +482,6 @@
 			doAssign();
 		});
 
-		var api = new SpotifyAPI();
-
 		var doSearch = function() {
 			var q = $('#search').val();
 			if (q != '') {
@@ -410,6 +507,16 @@
 			}
 		}
 
+		var pv = new PlaylistView(api, 'playlistsview');
+		pv.init();
+		pv.onSelectMp3 = function(mp3) {
+			$('#searchview').hide();
+			$('#sampleview').show();
+			$('#trackview').hide();
+			se.setUrl(mp3);
+			se.draw();
+		}
+
 		$('#search').keyup(function(e) {
 			doSearch();
 		});
@@ -432,27 +539,39 @@
 			$('#searchview').show();
 			$('#sampleview').show();
 			$('#trackview').hide();
+			$('#playlistsview').hide();
 		});
 
 		$('#menutrack').click(function(e) {
 			$('#searchview').hide();
 			$('#sampleview').hide();
 			$('#trackview').show();
+			$('#playlistsview').hide();
 		});
 
 		$('#menusample').click(function(e) {
 			$('#searchview').hide();
 			$('#sampleview').show();
 			$('#trackview').hide();
+			$('#playlistsview').hide();
 			se.draw();
 		});
-		
+
 		$('#menusearch').click(function(e) {
 			$('#searchview').show();
 			$('#sampleview').hide();
 			$('#trackview').hide();
+			$('#playlistsview').hide();
 		});
-		
+
+		$('#menuplaylists').click(function(e) {
+			pv.redraw();
+			$('#searchview').hide();
+			$('#sampleview').hide();
+			$('#trackview').hide();
+			$('#playlistsview').show();
+		});
+
 		// set up defaults
 
 		// 808 kick spotify:track:52VO7qzwlCnGiwnQ1oy5TF http://d318706lgtcm8e.cloudfront.net/mp3-preview/8f1b97e018fa23643e05abace8305e4e25ec4be6
@@ -494,15 +613,39 @@
 		doSearch();
 
 		function checkForLoadSong() {
-			console.log('checkForLoadSong', location);
-			var data = location.hash.replace(/#/g, '');
-			if (data.length > 0) {
-				try {
-					var json = window.atob(data);
-					console.log('loading json', json);
-					pat.parseJson(json);
-				} catch(e) {
-					console.error(e);
+			var hash = location.hash.replace(/#/g, '');
+
+			console.log('checkForLoadSong', hash);
+
+			if (hash.match('access_token=.*')) {
+				console.log('parsing access_token hash', hash);
+				var all = hash.split('&');
+				console.log('all', all);
+				all.forEach(function(keyvalue) {
+					var idx = keyvalue.indexOf('=');
+					var key = keyvalue.substring(0, idx);
+					var val = keyvalue.substring(idx + 1);
+					if (key == 'access_token') {
+						console.log('got access token', val);
+						api.Login.setAccessToken(val);
+						api.Login.getUserInfo(function(userinfo) {
+							console.log('got user info', userinfo);
+							api.Login.setUsername(userinfo.id);
+							pv.redraw();
+						});
+					}
+				});
+			} else {
+				console.log('parsing track state', location.hash);
+				var data = location.hash.replace(/#/g, '');
+				if (data.length > 0) {
+					try {
+						var json = window.atob(data);
+						console.log('loading json', json);
+						pat.parseJson(json);
+					} catch(e) {
+						console.error(e);
+					}
 				}
 			}
 		}
@@ -510,7 +653,7 @@
 		checkForLoadSong();
 		ts.draw();
 
-		player.play();
+		// player.play();
 	});
 
 })(window || this);

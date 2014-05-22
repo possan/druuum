@@ -68,35 +68,35 @@
 			console.log('proxy url', proxyurl);
 
 			var request = new XMLHttpRequest();
-		    request.open("GET", proxyurl, true);
-		    request.responseType = "arraybuffer";
+			request.open("GET", proxyurl, true);
+			request.responseType = "arraybuffer";
 			request.onload = function() {
-		        var audioData = request.response;
-		        console.log('audio onload', audioData);
-		        _this.context.decodeAudioData(audioData, function(tmpbuffer) {
-				   		var monobuffer = tmpbuffer.getChannelData(0);
-				   		console.log('monobuffer', monobuffer.length);
-				   		var maxlength = _this.maxsamples;
-				   		var newlength = Math.min(maxlength, monobuffer.length);
-				   		console.log('newlength', newlength);
-				   		var tmpbuffer2 = _this.context.createBuffer(1, maxlength, 44100);
-				   		var audioData2 = tmpbuffer2.getChannelData(0)
-						// var audioData2 = new Float32Array(newlength);
-				   		for(var i=0; i<newlength; i++) {
-				   			audioData2[i] = monobuffer[i];
-				   		}
-				   		// tmpbuffer.getChannelData(0).set(audioData2);
-				   		obj.buffer = tmpbuffer2;// _this.context.createBuffer(tmpbuffer, true);
-						obj.state = 'ready';
-						obj.callbacks.forEach(function(cb) {
-							cb(obj);
-						});
-					}, function() {});
+				var audioData = request.response;
+				console.log('audio onload', audioData);
+				_this.context.decodeAudioData(audioData, function(tmpbuffer) {
+					var monobuffer = tmpbuffer.getChannelData(0);
+					console.log('monobuffer', monobuffer.length);
+					var maxlength = _this.maxsamples;
+					var newlength = Math.min(maxlength, monobuffer.length);
+					console.log('newlength', newlength);
+					var tmpbuffer2 = _this.context.createBuffer(1, maxlength, 44100);
+					var audioData2 = tmpbuffer2.getChannelData(0)
+					// var audioData2 = new Float32Array(newlength);
+					for(var i=0; i<newlength; i++) {
+						audioData2[i] = monobuffer[i];
+					}
+					// tmpbuffer.getChannelData(0).set(audioData2);
+					obj.buffer = tmpbuffer2;// _this.context.createBuffer(tmpbuffer, true);
+					obj.state = 'ready';
+					obj.callbacks.forEach(function(cb) {
+						cb(obj);
+					});
+				}, function() {});
 
-			    };
-			    request.send();
+			};
+			request.send();
 
-				this.samples[url] = obj;
+			this.samples[url] = obj;
 		}
 	}
 
@@ -118,12 +118,12 @@
 				tmpgain.gain.value = gain;
 				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.00, gain || 1.00);
 				tmpgain.gain.linearRampToValueAtTime(gain, this.context.currentTime + decay / 1000.0 * 0.75);
-            	tmpgain.gain.linearRampToValueAtTime(0.00, this.context.currentTime + decay / 1000.0 * 1.00);
-		        tmpgain.connect(this.mixer);
+				tmpgain.gain.linearRampToValueAtTime(0.00, this.context.currentTime + decay / 1000.0 * 1.00);
+				tmpgain.connect(this.mixer);
 				var tmpsource = this.context.createBufferSource();
 				// console.log(tmpsource);
-		        tmpsource.buffer = samp.buffer;
-		        tmpsource.connect(tmpgain);
+				tmpsource.buffer = samp.buffer;
+				tmpsource.connect(tmpgain);
 				tmpsource.playbackRate.value = pitch || 1.0;
 				tmpsource.start(0, starttime / 1000.0, decay / 1000.0);
 			}
