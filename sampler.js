@@ -117,8 +117,8 @@
 				var tmpgain = this.context.createGain();
 				tmpgain.gain.value = gain;
 				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.00, gain || 1.00);
-				// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 0.90, gain || 1.00);
-            	// tmpgain.gain.linearRampToValueAtTime(this.context.currentTime + decay / 1000.0 * 1.00, 0.00);
+				tmpgain.gain.linearRampToValueAtTime(gain, this.context.currentTime + decay / 1000.0 * 0.75);
+            	tmpgain.gain.linearRampToValueAtTime(0.00, this.context.currentTime + decay / 1000.0 * 1.00);
 		        tmpgain.connect(this.mixer);
 				var tmpsource = this.context.createBufferSource();
 				// console.log(tmpsource);
