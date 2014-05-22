@@ -5,12 +5,12 @@
 
 	Search.prototype.searchTracks = function(query, callback) {
 
-		var url = 'https://api.spotify.com/v1/search?type=Track&q='+encodeURIComponent(query);
+		var url = 'https://api.spotify.com/v1/search?type=track&q='+encodeURIComponent(query);
 		$.ajax(url, {
 			dataType: 'json',
 			success: function(r) {
 				console.log('got tracks', r);
-				callback(r.tracks);
+				callback(r.tracks.items);
 			}
 		})
 	}
