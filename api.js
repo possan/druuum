@@ -70,12 +70,11 @@
 		return 'https://accounts.spotify.com/authorize?client_id=' + this.client_id
 			+ '&redirect_uri=' + encodeURIComponent(this.redirect)
 			+ '&scope=' + encodeURIComponent(scopes.join(' '))
-			+ '&state=' + encodeURIComponent(scopes.join(' '))
 			+ '&response_type=token';
 	}
 
 	Login.prototype.openLogin = function(oldstate) {
-		var url = this.getLoginURL(['playlist-read','playlist-read-private','user-read-private'], oldstate);
+		var url = this.getLoginURL(['playlist-read-private','user-read-private'], oldstate);
 		location = url;
 		// window.open(url);
 	}

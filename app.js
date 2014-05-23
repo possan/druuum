@@ -395,9 +395,11 @@
 
 	PlaylistView.prototype.redraw = function() {
 		if (this.api.Login.getAccessToken() == '') {
+			this.playlist = '';
+			this.playlistOwner = '';
 			this.element.find('#playlistlogin').show();
 			this.element.find('#playlistrootlistview').hide();
-			this.element.find('#playlistpaylistview').hide();
+			this.element.find('#playlistplaylistview').hide();
 		} else {
 			this.element.find('#playlistlogin').hide();
 			this.element.find('#username').text(this.api.Login.getUsername());
