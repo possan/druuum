@@ -268,7 +268,7 @@
 
 		var el = $('#samplepresets');
 		samplepresets.forEach(function(r) {
-			var el2 = $('<button />');
+			var el2 = $('<button class="btn btn-default" />');
 			el2.click(_this.loadPreset.bind(_this, r));
 			el2.text(r.name);
 			el.append(el2);
@@ -324,35 +324,35 @@
 		// hook up all event handlers.
 		var _this = this;
 
-		this.element.find('#playlistloginbutton').click(function() {
+		$('#playlistloginbutton').click(function() {
 			console.log('do login.');
 			_this.api.Login.openLogin();
 		});
 
-		this.element.find('#playlistlogoutbutton').click(function() {
+		$('#playlistlogoutbutton').click(function() {
 			console.log('do logout.');
 			_this.api.Login.setAccessToken('');
 			_this.redraw();
 		});
 
-		this.element.find('#rootlistlink').click(function() {
+		$('#rootlistlink').click(function() {
 			console.log('do logout.');
 			_this.playlist = '';
 			_this.playlistOwner = '';
 			_this.redraw();
 		});
 
-		this.element.find('#rootlistresults').click(function(e) {
+		$('#rootlistresults').click(function(e) {
 			console.log('click rootlistresults', e);
-			var targ = $(e.target);
+			var targ = $(e.target).parent();
 			_this.playlist = targ.attr('hit-playlist');
 			_this.playlistOwner = targ.attr('hit-owner');
 			_this.redraw();
 		});
 
-		this.element.find('#playlistresults').click(function(e) {
+		$('#playlistresults').click(function(e) {
 			console.log('click playlistesults', e);
-			var targ = $(e.target);
+			var targ = $(e.target).parent();
 			var id = targ.attr('hit-track');
 			console.log('load track id', id);
 			api.Track.load(id, function(track) {
@@ -369,25 +369,30 @@
 	}
 
 	PlaylistView.prototype.updateRootlist = function() {
-		$('#rootlistresults').html('<li>Loading...</li>');
+		$('#rootlistresults').html('<tr><td>Loading...</td></tr>');
 		this.api.Playlists.getRootlist(function(rootlist) {
 			console.log('rootlist', rootlist);
 			var ht = rootlist.items.map(function(r) {
 				// console.log('r', r);
-				return '<li hit-owner="' + r.owner.id + '" hit-playlist="' + r.id + '">' +
-					r.name + ' (' + r.tracks.count + ' tracks)</li>';
+				return '<tr hit-owner="' + r.owner.id +
+					'" hit-playlist="' + r.id +
+					'"><td>' + r.name +
+					'</td><td>' + (r.tracks.total || 0) + '</td></tr>\n';
 			});
 			$('#rootlistresults').html(ht.join(''));
 		});
 	}
 
 	PlaylistView.prototype.updatePlaylist = function() {
-		$('#playlistresults').html('<li>Loading...</li>');
+		$('#playlistresults').html('<tr><td>Loading...</td></tr>');
 		this.api.Playlists.getPlaylist(this.playlistOwner, this.playlist, function(playlist) {
 			console.log('playlist', playlist);
 			var ht = playlist.items.map(function(r) {
 				// console.log('r', r);
-				return '<li hit-track="' + r.track.id + '">' + r.track.name + ' - ' + r.track.artists[0].name + ' - ' + r.track.album.name + '</li>';
+				return '<tr hit-track="' + r.track.id + '"><td>' +
+					r.track.name + '</td><td>' +
+					r.track.artists[0].name + '</td><td>' +
+					r.track.album.name + '</td></tr>\n';
 			});
 			$('#playlistresults').html(ht.join(''));
 		});
@@ -397,19 +402,19 @@
 		if (this.api.Login.getAccessToken() == '') {
 			this.playlist = '';
 			this.playlistOwner = '';
-			this.element.find('#playlistlogin').show();
-			this.element.find('#playlistrootlistview').hide();
-			this.element.find('#playlistplaylistview').hide();
+			$('#playlistlogin').show();
+			$('#playlistrootlistview').hide();
+			$('#playlistplaylistview').hide();
 		} else {
-			this.element.find('#playlistlogin').hide();
-			this.element.find('#username').text(this.api.Login.getUsername());
+			$('#playlistlogin').hide();
+			$('#username').text(this.api.Login.getUsername());
 			if (this.playlist == '' && this.playlistOwner == '') {
-				this.element.find('#playlistrootlistview').show();
-				this.element.find('#playlistplaylistview').hide();
+				$('#playlistrootlistview').show();
+				$('#playlistplaylistview').hide();
 				this.updateRootlist();
 			} else {
-				this.element.find('#playlistrootlistview').hide();
-				this.element.find('#playlistplaylistview').show();
+				$('#playlistrootlistview').hide();
+				$('#playlistplaylistview').show();
 				this.updatePlaylist();
 			}
 		}
@@ -485,7 +490,7 @@
 		});
 
 		var doSearch = function() {
-			var q = $('#search').val();
+			var q = $('#searchquery').val();
 			if (q != '') {
 				console.log('search for', q);
 				api.Search.searchTracks(q, function(r) {
@@ -500,7 +505,7 @@
 					});
 					console.log(r);
 					var ht = filt.map(function(r) {
-						return '<li hit-mp3="' + r.mp3 + '">' + r.name + ' - ' + r.artist + ' - ' + r.album + '</li>';
+						return '<tr hit-mp3="' + r.mp3 + '"><td>' + r.name + '</td><td>' + r.artist + '</td><td>' + r.album + '</td></tr>';
 					});
 					$('#searchresults').html(ht.join(''));
 				})
@@ -512,26 +517,20 @@
 		var pv = new PlaylistView(api, 'playlistsview');
 		pv.init();
 		pv.onSelectMp3 = function(mp3) {
-			$('#searchview').hide();
-			$('#sampleview').show();
-			$('#trackview').hide();
 			se.setUrl(mp3);
 			se.draw();
 		}
 
-		$('#search').keyup(function(e) {
+		$('#searchquery').keyup(function(e) {0,
 			doSearch();
 		});
 
 		$('#searchresults').click(function(e) {
 			console.log('click searchresult', e);
-			var targ = $(e.target);
+			var targ = $(e.target).parent();
 			var mp3 = targ.attr('hit-mp3');
 			console.log('mp3 link', mp3);
 			if (mp3 != '') {
-				$('#searchview').hide();
-				$('#sampleview').show();
-				$('#trackview').hide();
 				se.setUrl(mp3);
 				se.draw();
 			}
@@ -610,7 +609,7 @@
 		pat.set(2, 10, 1);
 		pat.set(3, 0, 1);
 
-		$('#search').val('909');
+		$('#searchquery').val('909');
 
 		doSearch();
 
@@ -654,6 +653,35 @@
 
 		checkForLoadSong();
 		ts.draw();
+
+		function updateLoginMenu() {
+			$('#menuloggedin').hide();
+			$('#menuloggedout').hide();
+			if (api.Login.getAccessToken() == '') {
+				$('#menuloggedout').show();
+			} else {
+				$('#menuloggedin').show();
+				$('#loggedinuser').text(api.Login.getUsername());
+			}
+		}
+
+		updateLoginMenu();
+
+		$('#loginbutton').click(function() {
+			api.Login.openLogin();
+		});
+
+		$('#loggedinuser').click(function() {
+			api.Login.setAccessToken('');
+			pv.redraw();
+			updateLoginMenu();
+		});
+
+		$('#samplesource a').click(function (e) {
+			e.preventDefault();
+			$(this).tab('show');
+			se.draw();
+		});
 
 		// player.play();
 	});
