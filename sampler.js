@@ -64,7 +64,7 @@
 				callbacks: callback ? [callback] : []
 			}
 
-			var proxyurl = 'http://lab.possan.se:1234/' + url.replace('http://', '');
+			var proxyurl = 'http://lab.possan.se:1234/' + url.replace('http://', '').replace('https://', '');
 			console.log('proxy url', proxyurl);
 
 			var request = new XMLHttpRequest();
