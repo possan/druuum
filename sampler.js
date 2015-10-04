@@ -64,7 +64,7 @@
 				callbacks: callback ? [callback] : []
 			}
 
-			var proxyurl = 'http://lab.possan.se:1234/' + url.replace('http://', '').replace('https://', '');
+			var proxyurl = 'https://p.scdn.co/mp3-preview/' + url.split('/').pop();
 			console.log('proxy url', proxyurl);
 
 			var request = new XMLHttpRequest();
