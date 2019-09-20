@@ -7,6 +7,9 @@
 		var url = 'https://api.spotify.com/v1/search?type=track&q='+encodeURIComponent(query);
 		$.ajax(url, {
 			dataType: 'json',
+			headers: {
+				'Authorization': this.login.getAuthHeader()
+			},
 			success: function(r) {
 				console.log('got tracks', r);
 				callback(r.tracks.items);
@@ -21,6 +24,9 @@
 		var url = 'https://api.spotify.com/v1/tracks/'+encodeURIComponent(id);
 		$.ajax(url, {
 			dataType: 'json',
+			headers: {
+				'Authorization': this.login.getAuthHeader()
+			},
 			success: function(r) {
 				console.log('got track', r);
 				callback(r);
